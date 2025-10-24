@@ -26,12 +26,17 @@ const getLogSpy = () => {
 
 describe("자동차 경주", () => {
   describe("parseCarNames 단위 테스트", () => {
+    let app;
+    beforeEach(() => {
+      app = new App();
+    });
+
     test('쉼표로 구분된 문자열을 이름 배열로 정확히 분리해야 한다.', () => {
       // given
       const input = "pobi,woni,jun";
       
       // when 
-      const result = parseCarNames(input);
+      const result = app.parseCarNames(input);
       
       // then 
       expect(result).toEqual(['pobi', 'woni', 'jun']);
@@ -42,7 +47,7 @@ describe("자동차 경주", () => {
       const input = "  pobi ,woni, jun  "; 
       
       // when
-      const result = parseCarNames(input);
+      const result = app.parseCarNames(input);
       
       // then
       expect(result).toEqual(['pobi', 'woni', 'jun']);
@@ -53,7 +58,32 @@ describe("자동차 경주", () => {
       const input = "pobi"; 
       
       // when & then
-      expect(() => parseCarNames(input))
+      expect(() => app.parseCarNames(input))
+        .toThrow("[ERROR]");
+    });
+  });
+
+  describe("validateCarNames 단위 테스트", () => {
+    let app;
+    beforeEach(() => {
+      app = new App();
+    });
+
+    test('이름이 6자 이상인 경우엔 에러를 발생시켜야 한다.', () => {
+      // given
+      const input = ["woniii"]; 
+      
+      // when & then
+      expect(() => app.validateCarNames(input))
+        .toThrow("[ERROR]");
+    });
+
+    test('이름이 빈 문자열인 경우엔 에러를 발생시켜야 한다.', () => {
+      // given
+      const input = [""]; 
+      
+      // when & then
+      expect(() => app.validateCarNames(input))
         .toThrow("[ERROR]");
     });
   });
