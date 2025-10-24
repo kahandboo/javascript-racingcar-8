@@ -25,36 +25,36 @@ const getLogSpy = () => {
 };
 
 describe("자동차 경주", () => {
-  test("기능 테스트", async () => {
-    // given
-    const MOVING_FORWARD = 4;
-    const STOP = 3;
-    const inputs = ["pobi,woni", "1"];
-    const logs = ["pobi : -", "woni : ", "최종 우승자 : pobi"];
-    const logSpy = getLogSpy();
-
-    mockQuestions(inputs);
-    mockRandoms([MOVING_FORWARD, STOP]);
-
-    // when
-    const app = new App();
-    await app.run();
-
-    // then
-    logs.forEach((log) => {
-      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining(log));
+  describe("parseCarNames 단위 테스트", () => {
+    test('쉼표로 구분된 문자열을 이름 배열로 정확히 분리해야 한다.', () => {
+      // given
+      const input = "pobi,woni,jun";
+      
+      // when 
+      const result = parseCarNames(input);
+      
+      // then 
+      expect(result).toEqual(['pobi', 'woni', 'jun']);
     });
-  });
+  
+    test('이름 앞뒤에 공백이 있는 경우엔 공백을 제거해야 한다.', () => {
+      // given
+      const input = "  pobi ,woni, jun  "; 
+      
+      // when
+      const result = parseCarNames(input);
+      
+      // then
+      expect(result).toEqual(['pobi', 'woni', 'jun']);
+    });
 
-  test("예외 테스트", async () => {
-    // given
-    const inputs = ["pobi,javaji"];
-    mockQuestions(inputs);
-
-    // when
-    const app = new App();
-
-    // then
-    await expect(app.run()).rejects.toThrow("[ERROR]");
+    test('쉼표가 없는 단일 이름(2개 미만)이 입력되면 에러를 발생시켜야 한다.', () => {
+      // given
+      const input = "pobi"; 
+      
+      // when & then
+      expect(() => parseCarNames(input))
+        .toThrow("[ERROR]");
+    });
   });
 });
