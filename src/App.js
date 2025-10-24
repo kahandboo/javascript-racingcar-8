@@ -1,12 +1,7 @@
 import { MissionUtils } from "@woowacourse/mission-utils";
 
 export default class App {
-  async run() {
-    const carNamesInput = await this.getCarNamesInput();
-    const RoundInput = await this.getRoundInput();
-
-    const carNames = this.parseCarNames(carNamesInput);
-  }
+  async run() {}
 
   getCarNamesInput() {
     return MissionUtils.Console.readLineAsync("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)\n");
@@ -34,4 +29,18 @@ export default class App {
       }
     });
   }
+
+  setUpCars(carNames) {
+    const carsInfo = [];
+
+    carNames.forEach(carName => {
+      const carInfo = {
+        name: carName, 
+        score: 0
+      }
+      carsInfo.push(carInfo);
+    });
+    return carsInfo;
+  }
+
 }

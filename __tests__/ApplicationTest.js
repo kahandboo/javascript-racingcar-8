@@ -87,4 +87,44 @@ describe("자동차 경주", () => {
         .toThrow("[ERROR]");
     });
   });
+  
+  describe("setUpCars 단위 테스트", () => {
+    let app;
+    beforeEach(() => {
+      app = new App();
+    });
+
+    test('배열에 저장된 자동차 이름을 객체에 score와 함께 저장한다.', () => {
+      // given
+      const input = ["pobi", "woni"]; 
+      
+      // when
+      const result = app.setUpCars(input);
+      
+      // then
+      expect(result).toEqual([{name: 'pobi', score: 0}, {name: 'woni', score: 0}]);
+    });
+
+    test('배열에 저장된 자동차 이름이 하나여도 객체로 변환한다.', () => {
+      // given
+      const input = ["pobi"]; 
+      
+      // when
+      const result = app.setUpCars(input);
+      
+      // then
+      expect(result).toEqual([{name: 'pobi', score: 0}]);
+    });
+  
+    test('빈 배열이 입력될 경우, 빈 배열을 그대로 반환한다.', () => {
+      // given
+      const input = [];
+      
+      // when
+      const result = app.setUpCars(input);
+      
+      // then
+      expect(result).toEqual([]); 
+    });
+  });
 });
