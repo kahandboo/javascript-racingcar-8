@@ -127,4 +127,33 @@ describe("자동차 경주", () => {
       expect(result).toEqual([]); 
     });
   });
+
+  describe("decideMove 단위 테스트", () => {
+    let app;
+    beforeEach(() => {
+      app = new App();
+    });
+
+    test('randomNumber가 4 이상일 때 true를 반환한다.', () => {
+      // given
+      jest.spyOn(MissionUtils.Random, 'pickNumberInRange').mockReturnValue(4);      
+      
+      // when
+      const result = app.decideMove();
+      
+      // then
+      expect(result).toBe(true);
+    });
+
+    test('randomNumber가 3 이하일 때 false를 반환한다.', () => {
+      // given
+      jest.spyOn(MissionUtils.Random, 'pickNumberInRange').mockReturnValue(3);      
+      
+      // when
+      const result = app.decideMove();
+      
+      // then
+      expect(result).toBe(false);
+    });
+  });
 });
