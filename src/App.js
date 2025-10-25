@@ -53,6 +53,8 @@ export default class App {
   
       this.printScores(carsInfo);
     }
+
+    return carsInfo;
   }
 
   decideMove() {
@@ -69,5 +71,12 @@ export default class App {
       const scoreBar = '-'.repeat(car.score);
       MissionUtils.Console.print(`${car.name} : ${scoreBar}\n`);
     });
+  }
+
+  determineWinners(carsInfo) {
+    const maxScore = Math.max(...carsInfo.map(car => car.score));
+    const winners = carsInfo.filter(car => car.score === maxScore);
+
+    return winners;
   }
 }

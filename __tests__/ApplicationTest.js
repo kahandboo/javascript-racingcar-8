@@ -201,5 +201,45 @@ describe("자동차 경주", () => {
     
       expect(printSpy).not.toHaveBeenCalled(); 
     });
-  })
+  });
+
+  describe("determineWinners 단위 테스트", () => {
+    let app;
+    beforeEach(() => {
+      app = new App();
+    });
+
+    test("단독 우승자가 있는 경우, 해당 객체 배열을 반환한다.", () => {
+      // Given
+      const carsInfo = [
+        { name: 'pobi', score: 5 },
+        { name: 'jun', score: 3 },
+        { name: 'woni', score: 1 },
+      ];
+      
+      // When
+      const winners = app.determineWinners(carsInfo);
+
+      // Then
+      expect(winners).toEqual([{ name: 'pobi', score: 5 }]);
+    });
+
+    test("공동 우승자가 있는 경우, 해당 객체 배열 2개를 반환한다.", () => {
+      // Given
+      const carsInfo = [
+        { name: 'pobi', score: 5 },
+        { name: 'jun', score: 3 },
+        { name: 'woni', score: 5 }, 
+      ];
+      
+      // When
+      const winners = app.determineWinners(carsInfo);
+
+      // Then
+      expect(winners).toEqual([
+        { name: 'pobi', score: 5 },
+        { name: 'woni', score: 5 },
+      ]);
+    });
+  });
 });
