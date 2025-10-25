@@ -63,4 +63,11 @@ export default class App {
     }
     return false;
   }
+
+  printScores(carsInfo) {
+    carsInfo.forEach(car => {
+      const scoreBar = '-'.repeat(car.score);
+      MissionUtils.Console.print(`${car.name} : ${scoreBar}\n`);
+    });
+  }
 }

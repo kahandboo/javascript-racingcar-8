@@ -156,4 +156,50 @@ describe("자동차 경주", () => {
       expect(result).toBe(false);
     });
   });
+
+  describe("printScores 단위 테스트", () => {
+    let app;
+    beforeEach(() => {
+      app = new App();
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    test('점수판을 올바르게 출력한다', () => {
+      // Given:
+      const carsInfo = [
+        { name: 'pobi', score: 3 },
+        { name: 'crong', score: 1 },
+      ];
+      const printSpy = jest.spyOn(MissionUtils.Console, 'print').mockImplementation(() => {});
+    
+      // When
+      app.printScores(carsInfo);
+    
+      // Then
+      expect(printSpy).toHaveBeenCalledTimes(2); 
+      expect(printSpy.mock.calls[0][0]).toBe('pobi : ---\n'); 
+      expect(printSpy.mock.calls[1][0]).toBe('crong : -\n'); 
+    });
+
+    test('점수가 0일 때 하이픈 없이 출력한다', () => {
+      const carsInfo = [{ name: 'zeroCar', score: 0 }];
+      const printSpy = jest.spyOn(MissionUtils.Console, 'print').mockImplementation(() => {});
+    
+      app.printScores(carsInfo);
+      
+      expect(printSpy).toHaveBeenCalledWith('zeroCar : \n');
+    });
+    
+    test('차가 없을 때 아무것도 출력하지 않는다', () => {
+      const carsInfo = [];
+      const printSpy = jest.spyOn(MissionUtils.Console, 'print').mockImplementation(() => {});
+    
+      app.printScores(carsInfo);
+    
+      expect(printSpy).not.toHaveBeenCalled(); 
+    });
+  })
 });
