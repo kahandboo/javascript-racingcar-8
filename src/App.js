@@ -79,4 +79,10 @@ export default class App {
 
     return winners;
   }
+
+  printWinners(winners) {
+    const winnerNames = winners.map(winner => winner.name).join(", ");
+
+    MissionUtils.Console.print("최종 우승자 : " + winnerNames);
+  }
 }

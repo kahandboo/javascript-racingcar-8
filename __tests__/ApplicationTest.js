@@ -168,37 +168,43 @@ describe("자동차 경주", () => {
     });
 
     test('점수판을 올바르게 출력한다', () => {
-      // Given:
+      // given
       const carsInfo = [
         { name: 'pobi', score: 3 },
         { name: 'crong', score: 1 },
       ];
       const printSpy = jest.spyOn(MissionUtils.Console, 'print').mockImplementation(() => {});
     
-      // When
+      // when
       app.printScores(carsInfo);
     
-      // Then
+      // then
       expect(printSpy).toHaveBeenCalledTimes(2); 
       expect(printSpy.mock.calls[0][0]).toBe('pobi : ---\n'); 
       expect(printSpy.mock.calls[1][0]).toBe('crong : -\n'); 
     });
 
     test('점수가 0일 때 하이픈 없이 출력한다', () => {
+      // given
       const carsInfo = [{ name: 'zeroCar', score: 0 }];
       const printSpy = jest.spyOn(MissionUtils.Console, 'print').mockImplementation(() => {});
-    
+      
+      // when
       app.printScores(carsInfo);
       
+      // then
       expect(printSpy).toHaveBeenCalledWith('zeroCar : \n');
     });
     
     test('차가 없을 때 아무것도 출력하지 않는다', () => {
+      // given
       const carsInfo = [];
       const printSpy = jest.spyOn(MissionUtils.Console, 'print').mockImplementation(() => {});
     
+      // when
       app.printScores(carsInfo);
     
+      // then
       expect(printSpy).not.toHaveBeenCalled(); 
     });
   });
@@ -210,36 +216,76 @@ describe("자동차 경주", () => {
     });
 
     test("단독 우승자가 있는 경우, 해당 객체 배열을 반환한다.", () => {
-      // Given
+      // given
       const carsInfo = [
         { name: 'pobi', score: 5 },
         { name: 'jun', score: 3 },
         { name: 'woni', score: 1 },
       ];
       
-      // When
+      // when
       const winners = app.determineWinners(carsInfo);
 
-      // Then
+      // then
       expect(winners).toEqual([{ name: 'pobi', score: 5 }]);
     });
 
     test("공동 우승자가 있는 경우, 해당 객체 배열 2개를 반환한다.", () => {
-      // Given
+      // given
       const carsInfo = [
         { name: 'pobi', score: 5 },
         { name: 'jun', score: 3 },
         { name: 'woni', score: 5 }, 
       ];
       
-      // When
+      // when
       const winners = app.determineWinners(carsInfo);
 
-      // Then
+      // then
       expect(winners).toEqual([
         { name: 'pobi', score: 5 },
         { name: 'woni', score: 5 },
       ]);
+    });
+  });
+
+  describe("printWinners 단위 테스트", () => {
+    let app;
+    beforeEach(() => {
+      app = new App();
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    test("단일 우승자를 출력한다.", () => {
+      // given
+      const winners = [
+        { name: 'pobi', score: 3 },
+      ];
+      const printSpy = jest.spyOn(MissionUtils.Console, 'print').mockImplementation(() => {});
+    
+      // when
+      app.printWinners(winners);
+    
+      // then
+      expect(printSpy).toHaveBeenCalledWith('최종 우승자 : pobi'); 
+    });
+
+    test("복수 우승자를 출력한다.", () => {
+      // given
+      const winners = [
+        { name: 'pobi', score: 3 },
+        { name: 'woni', score: 3 },
+      ];
+      const printSpy = jest.spyOn(MissionUtils.Console, 'print').mockImplementation(() => {});
+    
+      // when
+      app.printWinners(winners);
+    
+      // then
+      expect(printSpy).toHaveBeenCalledWith('최종 우승자 : pobi, woni'); 
     });
   });
 });
