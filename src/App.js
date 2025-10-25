@@ -30,6 +30,18 @@ export default class App {
     });
   }
 
+  validateRound(roundInput) {
+    if (roundInput.trim() === "") {
+      throw new Error("[ERROR] 시도할 횟수를 입력해야 합니다.");
+    }
+    if (isNaN(Number(roundInput))) {
+      throw new Error("[ERROR] 시도할 횟수는 숫자여야 합니다.");
+    }
+    if (Number(roundInput) <= 0) {
+      throw new Error("[ERROR] 시도할 횟수는 1 이상이어야 합니다.");
+    }
+  }
+
   setUpCars(carNames) {
     const carsInfo = [];
 
@@ -53,8 +65,6 @@ export default class App {
   
       this.printScores(carsInfo);
     }
-
-    return carsInfo;
   }
 
   decideMove() {
