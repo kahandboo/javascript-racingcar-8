@@ -25,12 +25,16 @@ const getLogSpy = () => {
 };
 
 describe("자동차 경주", () => {
-  describe("parseCarNames 단위 테스트", () => {
-    let app;
-    beforeEach(() => {
-      app = new App();
-    });
+  let app;
+  beforeEach(() => {
+    app = new App();
+  });
 
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  describe("parseCarNames 단위 테스트", () => {
     test('쉼표로 구분된 문자열을 이름 배열로 정확히 분리해야 한다.', () => {
       // given
       const input = "pobi,woni,jun";
@@ -64,11 +68,6 @@ describe("자동차 경주", () => {
   });
 
   describe("validateCarNames 단위 테스트", () => {
-    let app;
-    beforeEach(() => {
-      app = new App();
-    });
-
     test('이름이 6자 이상인 경우엔 에러를 발생시켜야 한다.', () => {
       // given
       const input = ["woniii"]; 
@@ -89,11 +88,6 @@ describe("자동차 경주", () => {
   });
   
   describe("setUpCars 단위 테스트", () => {
-    let app;
-    beforeEach(() => {
-      app = new App();
-    });
-
     test('배열에 저장된 자동차 이름을 객체에 score와 함께 저장한다.', () => {
       // given
       const input = ["pobi", "woni"]; 
@@ -129,11 +123,6 @@ describe("자동차 경주", () => {
   });
 
   describe("decideMove 단위 테스트", () => {
-    let app;
-    beforeEach(() => {
-      app = new App();
-    });
-
     test('randomNumber가 4 이상일 때 true를 반환한다.', () => {
       // given
       jest.spyOn(MissionUtils.Random, 'pickNumberInRange').mockReturnValue(4);      
@@ -158,15 +147,6 @@ describe("자동차 경주", () => {
   });
 
   describe("printScores 단위 테스트", () => {
-    let app;
-    beforeEach(() => {
-      app = new App();
-    });
-
-    afterEach(() => {
-      jest.restoreAllMocks();
-    });
-
     test('점수판을 올바르게 출력한다', () => {
       // given
       const carsInfo = [
@@ -210,11 +190,6 @@ describe("자동차 경주", () => {
   });
 
   describe("determineWinners 단위 테스트", () => {
-    let app;
-    beforeEach(() => {
-      app = new App();
-    });
-
     test("단독 우승자가 있는 경우, 해당 객체 배열을 반환한다.", () => {
       // given
       const carsInfo = [
@@ -250,15 +225,6 @@ describe("자동차 경주", () => {
   });
 
   describe("printWinners 단위 테스트", () => {
-    let app;
-    beforeEach(() => {
-      app = new App();
-    });
-
-    afterEach(() => {
-      jest.restoreAllMocks();
-    });
-
     test("단일 우승자를 출력한다.", () => {
       // given
       const winners = [
@@ -286,6 +252,82 @@ describe("자동차 경주", () => {
     
       // then
       expect(printSpy).toHaveBeenCalledWith('최종 우승자 : pobi, woni'); 
+    });
+  });
+
+  test("통합 테스트", async () => {
+    // given
+    const MOVING_FORWARD = 4;
+    const STOP = 3;
+    const inputs = ["pobi,woni", "1"];
+    const logs = ["pobi : -", "woni : ", "최종 우승자 : pobi"];
+    const logSpy = getLogSpy();
+
+    mockQuestions(inputs);
+    mockRandoms([MOVING_FORWARD, STOP]);
+
+    // when
+    await app.run();
+
+    // then
+    logs.forEach((log) => {
+      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining(log));
+    });
+  });
+
+  describe("예외 테스트", () => {
+    test("시도할 횟수가 입력되지 않은 경우 에러가 발생한다.", async () => {
+      // given
+      const inputs = ["pobi,woni", ""];
+      mockQuestions(inputs);
+    
+      // when & then
+      await expect(app.run()).rejects.toThrow("[ERROR]");
+    });
+
+    test("시도할 횟수가 숫자가 아닌 경우 에러가 발생한다.", async () => {
+      // given
+      const inputs = ["pobi, woni", "aa"];
+      mockQuestions(inputs);
+
+      // when & then
+      await expect(app.run()).rejects.toThrow("[ERROR]");
+    });
+
+    test("시도할 횟수가 1 이하일 경우 에러가 발생한다.", async () => {
+      // given
+      const inputs = ["pobi, woni", "-1"];
+      mockQuestions(inputs);
+  
+      // when & then
+      await expect(app.run()).rejects.toThrow("[ERROR]");
+    });
+    
+    test("자동차 이름이 입력되지 않은 경우 에러가 발생한다.", async () => {
+      // given
+      const inputs = ["", "2"];
+      mockQuestions(inputs);
+  
+      // when & then
+      await expect(app.run()).rejects.toThrow("[ERROR]");
+    });
+
+    test("자동차 이름이 하나만 입력된 경우 에러가 발생한다.", async () => {
+      // given
+      const inputs = ["pobi", "2"];
+      mockQuestions(inputs);
+  
+      // when & then
+      await expect(app.run()).rejects.toThrow("[ERROR]");
+    });
+
+    test("자동차 이름의 길이가 6 이상인 경우 에러가 발생한다.", async () => {
+      // given
+      const inputs = ["pobiwonijavaji, woni", "2"];
+      mockQuestions(inputs);
+  
+      // when & then
+      await expect(app.run()).rejects.toThrow("[ERROR]");
     });
   });
 });
