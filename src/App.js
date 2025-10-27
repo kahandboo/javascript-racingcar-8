@@ -70,12 +70,13 @@ export default class App {
 
   startGame(carsInfo, round) {
     for (let i = 0; i < round; i++) {
-      carsInfo.forEach(car => { 
-        this.moveCars(car);
-      });
-  
+      this.progressRound(carsInfo);
       this.printScores(carsInfo);
     }
+  }
+
+  progressRound(carsInfo) {
+    carsInfo.forEach(car => this.moveCars(car));
   }
 
   moveCars(car) {

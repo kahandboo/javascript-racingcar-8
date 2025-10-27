@@ -122,6 +122,73 @@ describe("자동차 경주", () => {
     });
   });
 
+  describe("progressRound 단위 테스트", () => {
+    test('모든 자동차에 대해 moveCars를 호출하고, decideMove 결과에 따라 점수를 업데이트한다.', () => {
+      // given
+      const carsInfo = [
+        { name: 'pobi', score: 0 },
+        { name: 'woni', score: 0 },
+        { name: 'jun', score: 0 }
+      ];
+
+      jest.spyOn(app, 'decideMove');
+      app.decideMove.mockReturnValueOnce(true)
+                      .mockReturnValueOnce(true)
+                      .mockReturnValueOnce(false);
+                      
+      // when
+      app.progressRound(carsInfo);
+
+      // then
+      expect(app.decideMove).toHaveBeenCalledTimes(3); 
+      expect(carsInfo[0].score).toBe(1); 
+      expect(carsInfo[1].score).toBe(1);
+      expect(carsInfo[2].score).toBe(0);
+    });
+
+    test('빈 배열이 주어졌을 때 아무것도 하지 않아야 한다.', () => {
+      // given
+      const carsInfo = [];
+      jest.spyOn(app, 'decideMove');
+
+      // when
+      app.progressRound(carsInfo);
+
+      // then
+      expect(app.decideMove).not.toHaveBeenCalled(); 
+    });
+  });
+
+  describe("moveCars 단위 테스트", () => {
+    test('decideMove가 true를 반환하면 score를 1 증가시킨다.', () => {
+      // given
+      const car = {name: 'pobi', score: 0};
+      jest.spyOn(app, 'decideMove');
+      app.decideMove.mockReturnValue(true);
+
+      // when
+      app.moveCars(car);
+
+      // then
+      expect(car.score).toBe(1);
+      expect(app.decideMove).toHaveBeenCalledTimes(1); 
+    });
+
+    test('decideMove가 false를 반환하면 score는 변경되지않는다.', () => {
+      // given
+      const car = {name: 'pobi', score: 0};
+      jest.spyOn(app, 'decideMove');
+      app.decideMove.mockReturnValue(false); 
+
+      // when
+      app.moveCars(car);
+
+      // then
+      expect(car.score).toBe(0);
+      expect(app.decideMove).toHaveBeenCalledTimes(1); 
+    });
+  });
+
   describe("decideMove 단위 테스트", () => {
     test('randomNumber가 4 이상일 때 true를 반환한다.', () => {
       // given
@@ -147,7 +214,7 @@ describe("자동차 경주", () => {
   });
 
   describe("printScores 단위 테스트", () => {
-    test('점수판을 올바르게 출력한다', () => {
+    test('점수판을 올바르게 출력한다.', () => {
       // given
       const carsInfo = [
         { name: 'pobi', score: 3 },
@@ -164,7 +231,7 @@ describe("자동차 경주", () => {
       expect(printSpy.mock.calls[1][0]).toBe('crong : -\n'); 
     });
 
-    test('점수가 0일 때 하이픈 없이 출력한다', () => {
+    test('점수가 0일 때 하이픈 없이 출력한다.', () => {
       // given
       const carsInfo = [{ name: 'zeroCar', score: 0 }];
       const printSpy = jest.spyOn(MissionUtils.Console, 'print').mockImplementation(() => {});
@@ -176,7 +243,7 @@ describe("자동차 경주", () => {
       expect(printSpy).toHaveBeenCalledWith('zeroCar : \n');
     });
     
-    test('차가 없을 때 아무것도 출력하지 않는다', () => {
+    test('차가 없을 때 아무것도 출력하지 않는다.', () => {
       // given
       const carsInfo = [];
       const printSpy = jest.spyOn(MissionUtils.Console, 'print').mockImplementation(() => {});
