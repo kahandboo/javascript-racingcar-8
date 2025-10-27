@@ -13,16 +13,20 @@
 5. validateRound()
     - 시도할 횟수 검증(빈 문자열, 숫자, 정수) -> Error 발생
 6. startGame()
-    - 시도 횟수동안 객체를 순회하면서 전진/멈춤 동작 수행
-7. decideMove()
+    - 게임을 주어진 횟수만큼 실행하고 매 라운드 결과를 출력
+7. progressRound()
+    - 한 라운드 동안 객체를 순회하며 moveCars()를 호출
+8. moveCars()
+    - decideMove() 결과에 따라 해당 자동차의 점수를 증가 및 유지
+9. decideMove()
     - 전진 조건 계산해서 전진(true) or 멈춤(false) 동작 반환
-8. printScores()
+10. printScores()
     - 게임을 진행하면서 각 자동차의 점수를 (-)형식으로 출력
-9. determineWinners()
+11. determineWinners()
     - 가장 높은 점수를 기록한 자동차를 우승자로 선택
-10. printWinners()
+12. printWinners()
     - 우승자 출력(여러명일 경우 쉼표로 구분)
-11. carsInfo 배열 </br>
+13. carsInfo 배열 </br>
     - carsInfo = [ </br>
         {name: "woni", score: 1}, </br>
         {name: "pobi", score: 10}, </br>
