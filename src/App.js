@@ -1,5 +1,5 @@
 import { MissionUtils } from "@woowacourse/mission-utils";
-import { CONSTANTS, INPUT_MESSAGES, ERROR_MESSAGES } from "./constants.js";
+import { CONSTANTS, INPUT_MESSAGES, ERROR_MESSAGES } from "./Constants.js";
 
 export default class App {
   async run() {
@@ -58,7 +58,7 @@ export default class App {
     if (isNaN(Number(roundInput))) {
       throw new Error(ERROR_MESSAGES.ROUND_NOT_NUMBER);
     }
-    
+
     if (Number(roundInput) <= 0) {
       throw new Error(ERROR_MESSAGES.ROUND_POSITIVE);
     }
