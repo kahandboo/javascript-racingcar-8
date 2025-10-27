@@ -54,9 +54,11 @@ export default class App {
     if (!roundInput || roundInput.trim() === "") {
       throw new Error(ERROR_MESSAGES.EMPTY_ROUND);
     }
+
     if (isNaN(Number(roundInput))) {
       throw new Error(ERROR_MESSAGES.ROUND_NOT_NUMBER);
     }
+    
     if (Number(roundInput) <= 0) {
       throw new Error(ERROR_MESSAGES.ROUND_POSITIVE);
     }
