@@ -1,4 +1,5 @@
 import { MissionUtils } from "@woowacourse/mission-utils";
+import { CONSTANTS, INPUT_MESSAGES, ERROR_MESSAGES } from "./constants.js";
 
 export default class App {
   async run() {
@@ -17,15 +18,15 @@ export default class App {
   }
 
   getCarNamesInput() {
-    return MissionUtils.Console.readLineAsync("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)\n");
+    return MissionUtils.Console.readLineAsync(INPUT_MESSAGES.CAR_NAMES);
   }
   
   getRoundInput() {
-    return MissionUtils.Console.readLineAsync("시도할 횟수는 몇 회인가요?\n");
+    return MissionUtils.Console.readLineAsync(INPUT_MESSAGES.ROUND_COUNT);
   }
 
   parseCarNames(carNamesInput) {
-    if (!carNamesInput.includes(",")) throw new Error("[ERROR] 자동차 이름은 2개 이상 입력해야합니다.\n");
+    if (!carNamesInput.includes(",")) throw new Error(ERROR_MESSAGES.MIN_CAR_COUNT);
     const carNames = carNamesInput.split(",");
     
     return carNames.map(carName => carName.trim());
@@ -33,31 +34,31 @@ export default class App {
 
   validateCarNames(carNames) {
     carNames.forEach(carName => {
-      if (carName.length >= 6) {
-        throw new Error("[ERROR] 이름은 5자 이하여야 합니다.");
+      if (carName.length > CONSTANTS.MAX_NAME_LENGTH) {
+        throw new Error(ERROR_MESSAGES.NAME_LENGTH);
       }
 
       if (carName === '') {
-        throw new Error("[ERROR] 이름은 빈 문자열일 수 없습니다.");
+        throw new Error(ERROR_MESSAGES.EMPTY_NAME);
       }
     });
 
     const uniqueCarNames = new Set(carNames);
     
     if (uniqueCarNames.size != carNames.length) {
-        throw new Error("[ERROR] 자동차 이름은 중복될 수 없습니다.");
+        throw new Error(ERROR_MESSAGES.DUPLICATE_NAME);
     }
   }
 
   validateRound(roundInput) {
     if (!roundInput || roundInput.trim() === "") {
-      throw new Error("[ERROR] 시도할 횟수를 입력해야 합니다.");
+      throw new Error(ERROR_MESSAGES.EMPTY_ROUND);
     }
     if (isNaN(Number(roundInput))) {
-      throw new Error("[ERROR] 시도할 횟수는 숫자여야 합니다.");
+      throw new Error(ERROR_MESSAGES.ROUND_NOT_NUMBER);
     }
     if (Number(roundInput) <= 0) {
-      throw new Error("[ERROR] 시도할 횟수는 1 이상이어야 합니다.");
+      throw new Error(ERROR_MESSAGES.ROUND_POSITIVE);
     }
   }
 
@@ -90,9 +91,9 @@ export default class App {
   }
 
   decideMove() {
-    const randomNumber = MissionUtils.Random.pickNumberInRange(0, 9);
+    const randomNumber = MissionUtils.Random.pickNumberInRange(CONSTANTS.RANDOM_RANGE_MIN, CONSTANTS.RANDOM_RANGE_MAX);
         
-    if (randomNumber >= 4) {
+    if (randomNumber >= CONSTANTS.MIN_MOVE_NUMBER) {
       return true;
     }
     return false;
