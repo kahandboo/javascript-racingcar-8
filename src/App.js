@@ -41,6 +41,12 @@ export default class App {
         throw new Error("[ERROR] 이름은 빈 문자열일 수 없습니다.");
       }
     });
+
+    const uniqueCarNames = new Set(carNames);
+    
+    if (uniqueCarNames.size != carNames.length) {
+        throw new Error("[ERROR] 자동차 이름은 중복될 수 없습니다.");
+    }
   }
 
   validateRound(roundInput) {
@@ -95,7 +101,7 @@ export default class App {
   printScores(carsInfo) {
     carsInfo.forEach(car => {
       const scoreBar = '-'.repeat(car.score);
-      MissionUtils.Console.print(`${car.name} : ${scoreBar}\n`);
+      MissionUtils.Console.print(`${car.name} : ${scoreBar}`);
     });
   }
 

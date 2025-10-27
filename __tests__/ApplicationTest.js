@@ -85,6 +85,15 @@ describe("자동차 경주", () => {
       expect(() => app.validateCarNames(input))
         .toThrow("[ERROR]");
     });
+
+    test('같은 이름이 2번 이상 입력된 경우엔 에러를 발생시켜야 한다.', () => {
+      // given
+      const input = ["woni, woni, pobi"]; 
+      
+      // when & then
+      expect(() => app.validateCarNames(input))
+        .toThrow("[ERROR]");
+    });
   });
   
   describe("setUpCars 단위 테스트", () => {
@@ -227,8 +236,8 @@ describe("자동차 경주", () => {
     
       // then
       expect(printSpy).toHaveBeenCalledTimes(2); 
-      expect(printSpy.mock.calls[0][0]).toBe('pobi : ---\n'); 
-      expect(printSpy.mock.calls[1][0]).toBe('crong : -\n'); 
+      expect(printSpy.mock.calls[0][0]).toBe('pobi : ---'); 
+      expect(printSpy.mock.calls[1][0]).toBe('crong : -'); 
     });
 
     test('점수가 0일 때 하이픈 없이 출력한다.', () => {
@@ -240,7 +249,7 @@ describe("자동차 경주", () => {
       app.printScores(carsInfo);
       
       // then
-      expect(printSpy).toHaveBeenCalledWith('zeroCar : \n');
+      expect(printSpy).toHaveBeenCalledWith('zeroCar : ');
     });
     
     test('차가 없을 때 아무것도 출력하지 않는다.', () => {
