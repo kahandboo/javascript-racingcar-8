@@ -44,7 +44,7 @@ export default class App {
   }
 
   validateRound(roundInput) {
-    if (roundInput.trim() === "") {
+    if (!roundInput || roundInput.trim() === "") {
       throw new Error("[ERROR] 시도할 횟수를 입력해야 합니다.");
     }
     if (isNaN(Number(roundInput))) {
